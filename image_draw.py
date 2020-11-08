@@ -23,6 +23,7 @@ def draw_circle(event,x,y,flags,param):
             cv.circle(img,(x,y),5,(0,0,255),-1)
 
 img = cv.imread("./image.jpg")
+
 cv.namedWindow('image')
 cv.setMouseCallback('image',draw_circle)
 while(1):

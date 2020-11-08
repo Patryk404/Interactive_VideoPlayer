@@ -1,11 +1,12 @@
 import cv2 
+import numpy as np
 drawing = False # true if mouse is pressed
 mode = True # if True, draw rectangle. Press 'm' to toggle to curve
 
 cv2.namedWindow('Video', cv2.WINDOW_NORMAL)
-cv2.resizeWindow('Video', 600,600)
-cap = cv2.VideoCapture('http://87.204.161.46/mjpg/video.mjpg')
-
+cv2.resizeWindow('Video', 1000,1000)
+cap = cv2.VideoCapture('./video.mp4')
+# Create a black image
 LIST=[]
 
 def clear_frame():
@@ -40,14 +41,17 @@ def draw_circle(event,x,y,flags,param):
 cv2.setMouseCallback('Video',draw_circle)
 while True:
     ret, frame = cap.read()
-    FRAME=frame
-    add_circles_to_frame()
-    cv2.imshow('Video',FRAME)
-    key = cv2.waitKey(1)
-    if key == ord('q'):
-          break
-    elif key == ord('c'):
-        clear_frame()
+    if ret:
+        FRAME=frame
+        add_circles_to_frame()
+        cv2.imshow('Video',FRAME)
+        key = cv2.waitKey(1)
+        if key == ord('q'):
+            break
+        elif key == ord('c'):
+            clear_frame()
+    else:
+        cap.set(cv2.CAP_PROP_POS_FRAMES,0)
 
 cap.release()
 cv2.destroyAllWindows()
