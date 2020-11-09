@@ -1,5 +1,9 @@
-from player import Player
+from tkinter import *
+import sys
+from GUI import Gui
 
-player = Player()
+GUI = Gui("Player",sys.argv[1])
 
-player.run()
+GUI.create_Interface()
+
+GUI.loop()
