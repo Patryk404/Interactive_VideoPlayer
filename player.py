@@ -9,11 +9,11 @@ class Player:
         self.actual_duration =0
         self.update= False
         self.videoFrame = ttk.Frame(window,width=width, height=height)
-        self.videoFrame.grid(row=0,column=0, padx=10, pady=2)
+        self.videoFrame.pack()
         self.VideoWindow = ttk.Label(self.videoFrame)
-        self.VideoWindow.grid(row=0,column=0)
-        self.VideoWindow.bind("<B1-Motion>",self.handle_mouse)
+        self.VideoWindow.pack()
         self.set_video_duration(video_path)
+        self.VideoWindow.bind("<B1-Motion>",self.draw)
 
     def set_video_duration(self,video_path):
         self.cap = cv2.VideoCapture(video_path)
@@ -32,17 +32,22 @@ class Player:
 
     def get_video_actual_time(self,duration):
         self.actual_duration = duration/1000
-    def handle_mouse(self,event):
-        self.history_circles.append((event.x,event.y))
-    def clear_screen(self):
-        self.history_circles= []
-        frame = self.cap.read()[1]
-        self.frame = frame
     
     def set_new_msc(self,milisc):
         self.cap.set(cv2.CAP_PROP_POS_MSEC,milisc)
         self.frame =  self.cap.read()[1]
 
+    def draw_lines(self,frame):
+        length = len(self.history_circles)
+        for i in range(length):
+            try:
+                cv2.line(frame,self.history_circles[i],self.history_circles[i+1],(0,255,0),thickness=3)
+            except IndexError:
+                return
+
+
+    def draw(self,event):
+        self.history_circles.append((event.x,event.y))
     def render(self):
         if (self.play):
             ref, frame = self.cap.read()
@@ -50,8 +55,7 @@ class Player:
             self.get_video_actual_time(self.cap.get(cv2.CAP_PROP_POS_MSEC))
             self.update = True        
             if ref: 
-                for position in self.history_circles:
-                    cv2.line(frame,position,position,(0,0,255))
+                self.draw_lines(self.frame)
                 cv2image= cv2.cvtColor(frame,cv2.COLOR_BGR2RGBA)
                 img = Image.fromarray(cv2image)
                 imgtk = ImageTk.PhotoImage(image=img)
@@ -63,8 +67,7 @@ class Player:
                 self.VideoWindow.after(10, self.render)
         else:
             self.update=False
-            for position in self.history_circles:
-                cv2.circle(self.frame,position,5,(0,0,255),thickness=-1)
+            self.draw_lines(self.frame)
             cv2image= cv2.cvtColor(self.frame,cv2.COLOR_BGR2RGBA)
             img = Image.fromarray(cv2image)
             imgtk = ImageTk.PhotoImage(image=img)
