@@ -17,8 +17,8 @@ class Gui:
         self.scale_widget.bind('<ButtonPress>',self.handle_Scale_click)   
         self.scale_widget.bind('<ButtonRelease>',self.handle_Scale_release)                
         Button(self.button_frame,text="Play/Stop",width=10,bg="black", fg="white", command=self.handle_playButton_stopButton).grid(row=2, column=2)
-        Button(self.button_frame,text="<<", width=5,bg="black", fg="white").grid(row=2,column =1)
-        Button(self.button_frame,text=">>", width=5,bg="black", fg="white").grid(row=2,column =3)
+        Button(self.button_frame,text="<<", width=5,bg="black", fg="white",command=self.handle_previousframeButton).grid(row=2,column =1)
+        Button(self.button_frame,text=">>", width=5,bg="black", fg="white",command=self.handle_nextframeButton).grid(row=2,column =3)
         Button(self.button_frame,text="Reset", width=5,bg="black", fg="white", command=self.handle_resetButton).grid(row=2,column = 20)
         self.player.render()
 
@@ -26,7 +26,13 @@ class Gui:
         self.player.play = not self.player.play
 
     def handle_resetButton(self):
-        self.player.clear_screen()
+        self.player.draw.clear_screen()
+
+    def handle_nextframeButton(self):
+        self.player.nextFrame()
+
+    def handle_previousframeButton(self):
+        self.player.previousFrame()
 
     def update_interface(self):
         if self.player.update:
@@ -42,6 +48,6 @@ class Gui:
 
     def handle_Scale_release(self,event):
         self.player.update = True
-        
+
     def loop(self):
         self.window.mainloop()
