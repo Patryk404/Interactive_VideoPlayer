@@ -10,12 +10,16 @@ class Player:
         self.actual_duration =0
         self.update= False
         self.videoFrame = ttk.Frame(window,width=width, height=height)
-        self.videoFrame.pack()
+        self.videoFrame.grid(row=0,column=0, padx=10, pady=2)
         self.VideoWindow = ttk.Label(self.videoFrame)
-        self.VideoWindow.pack()
+        self.VideoWindow.grid(row=0,column=0)
         self.set_video_duration(video_path)
         self.VideoWindow.bind("<B1-Motion>",self.draw)
         self.VideoWindow.bind("<ButtonRelease-1>",self.handle_drawing)
+
+    def clear_screen(self):
+        self.history_circles = [[]]
+        self.line_i = 0
 
     def set_video_duration(self,video_path):
         self.cap = cv2.VideoCapture(video_path)
@@ -50,7 +54,8 @@ class Player:
                 try:
                     cv2.line(frame,self.history_circles[i[0]][j[0]],self.history_circles[i[0]][j[0]+1],(0,255,0),thickness=2)
                 except:
-                    0
+                    pass
+                
 
     def draw(self,event):
         self.history_circles[self.line_i].append((event.x,event.y))
