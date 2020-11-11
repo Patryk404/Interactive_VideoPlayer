@@ -3,9 +3,10 @@ from PIL import ImageTk, Image
 import cv2
 class Player:
     def __init__(self,video_path,window,width,height):
-        self.history_circles = []
+        self.history_circles = [[]]
         self.play = True
         self.frame = 0
+        self.line_i = 0
         self.actual_duration =0
         self.update= False
         self.videoFrame = ttk.Frame(window,width=width, height=height)
@@ -14,6 +15,7 @@ class Player:
         self.VideoWindow.pack()
         self.set_video_duration(video_path)
         self.VideoWindow.bind("<B1-Motion>",self.draw)
+        self.VideoWindow.bind("<ButtonRelease-1>",self.handle_drawing)
 
     def set_video_duration(self,video_path):
         self.cap = cv2.VideoCapture(video_path)
@@ -30,6 +32,11 @@ class Player:
         self.minutes = minutes
         self.seconds = seconds
 
+    def handle_drawing(self,event):
+        self.history_circles.append([])
+        self.line_i+=1
+        #print(self.history_circles)
+
     def get_video_actual_time(self,duration):
         self.actual_duration = duration/1000
     
@@ -38,16 +45,15 @@ class Player:
         self.frame =  self.cap.read()[1]
 
     def draw_lines(self,frame):
-        length = len(self.history_circles)
-        for i in range(length):
-            try:
-                cv2.line(frame,self.history_circles[i],self.history_circles[i+1],(0,255,0),thickness=3)
-            except IndexError:
-                return
-
+        for i in enumerate(self.history_circles):
+            for j in enumerate(i[1]):
+                try:
+                    cv2.line(frame,self.history_circles[i[0]][j[0]],self.history_circles[i[0]][j[0]+1],(0,255,0),thickness=2)
+                except:
+                    0
 
     def draw(self,event):
-        self.history_circles.append((event.x,event.y))
+        self.history_circles[self.line_i].append((event.x,event.y))
     def render(self):
         if (self.play):
             ref, frame = self.cap.read()

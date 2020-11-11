@@ -1,6 +1,5 @@
 from tkinter import *
 from player import Player
-from draw2 import Draw
 
 class Gui:
     def __init__(self,title,path_video):
@@ -11,7 +10,6 @@ class Gui:
         self.button_frame.configure(bg="grey")
         self.button_frame.pack()
         self.scale_widget = 0
-        self.draw = Draw(self.window)
     def create_Interface(self):
         self.scale_widget=Scale(self.window,from_=0, to=self.player.duration, resolution=0.1, length=800, orient=HORIZONTAL) # repair this
         self.scale_widget.pack()   
