@@ -39,6 +39,7 @@ class Player:
 
     def nextFrame(self):
         self.update=True
+        self.play=True
         actual_frame = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, actual_frame+5)
         self.frame = self.cap.read()[1]
@@ -67,7 +68,6 @@ class Player:
                 self.cap.set(cv2.CAP_PROP_POS_FRAMES,0)
                 self.VideoWindow.after(10, self.render)
         else:
-            self.update=False
             self.draw.draw_lines(self.frame)
             cv2image= cv2.cvtColor(self.frame,cv2.COLOR_BGR2RGBA)
             img = Image.fromarray(cv2image)

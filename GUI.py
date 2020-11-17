@@ -26,6 +26,7 @@ class Gui:
         self.player.play = not self.player.play
 
     def handle_resetButton(self):
+        self.player.frame = self.player.cap.read()[1]
         self.player.draw.clear_screen()
 
     def handle_nextframeButton(self):
